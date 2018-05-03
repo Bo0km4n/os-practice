@@ -1,4 +1,26 @@
-## i386-elf-gcc のインストール
+# 環境設定
+
+## 開発環境
+
+* OS - OS X HighSierra
+* エミュレータ - QEMU emulator version 2.11.0
+Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers
+* アセンブラ - nasm
+* gcc - i386-elf-gcc (base gcc ver6)
+* ld - gnu ld 
+
+書籍のアセンブラやビルドはWindows環境及び、著者の独自アセンブラで書かれています。
+また、macにプリインストールされているgcc, ldではi386のイメージがオプションの都合でビルドできないため最初にクロスコンパイル環境は構築します。
+
+## クロスコンパイル環境構築
+
+day3以降はC言語とアセンブラのオブジェクトファイルをリンクしてビルドします。
+この際にOS X既存のGCCでは上手くビルドできないため以下の手順を行ってください。
+
+### i386-elf-gcc, gnu ldの導入
+
+以下のコマンドを実行して導入します。
+これで各日付ディレクトリ内の `make run` でqemuが立ち上がるはずです。
 
 ```
 brew install gcc6
