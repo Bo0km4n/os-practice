@@ -11,6 +11,7 @@ void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
 void boxfill8(unsigned char *vram,  int xsize, unsigned char c, int x0, int y0, int x1, int y1);
 void init_screen(char *vram, int x, int y);
+
 #define COL8_000000		0
 #define COL8_FF0000		1
 #define COL8_00FF00		2
@@ -28,23 +29,19 @@ void init_screen(char *vram, int x, int y);
 #define COL8_008484		14
 #define COL8_848484		15
 
+struct BOOTINFO {
+	char cyls, leds, vmode, reserve;
+	short scrnx, scrny;
+	char *vram;
+};
+
 void HariMain(void)
 {
 	char *vram;
 	int xsize, ysize;
-	short *binfo_scrnx, *binfo_scrny;
-	int *binfo_vram;
-
-
+	struct BOOTINFO *binfo = (struct BOOTINFO  *) 0x0ff0;
 	init_palette();
-	binfo_scrnx = (short *) 0x0ff4;
-	binfo_scrny = (short *) 0x0ff6;
-	binfo_vram = (int *) 0x0ff8;
-	xsize = *binfo_scrnx;
-	ysize = *binfo_scrny;
-	vram = (char *) *binfo_vram;
-
-	init_screen(vram, xsize, ysize);
+	init_screen(binfo->vram, binfo->scrnx, binfo->scrny);
 
 	for (;;) {
 		io_hlt();
@@ -103,7 +100,8 @@ void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, i
 	return;
 }
 
-void init_screen(char *vram, int x, int y) {
+void init_screen(char *vram, int x, int y)
+{
 	boxfill8(vram, x, COL8_008484,  0,     0,      x -  1, y - 29);
 	boxfill8(vram, x, COL8_C6C6C6,  0,     y - 28, x -  1, y - 28);
 	boxfill8(vram, x, COL8_FFFFFF,  0,     y - 27, x -  1, y - 27);
@@ -122,3 +120,4 @@ void init_screen(char *vram, int x, int y) {
 	boxfill8(vram, x, COL8_FFFFFF, x -  3, y - 24, x -  3, y -  3);
 	return;
 }
+
